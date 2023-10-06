@@ -37,24 +37,27 @@ class Home extends Component {
 
     constructor() {
         super()
+    }
+
+    componentDidMount () {
         const savedProducts = JSON.parse(localStorage.getItem('products')) || this.state.products
         this.setState({
             products: savedProducts
         })
     }
 
-    componentDidMount() {}
+    componentDidUpdate() {
+        this.saveToStorage()
+    }
 
-    componentWillUnmount = () => {
-        localStorage.setItem('products', JSON.stringify(this.state.products))
+    saveToStorage = () => {
+        localStorage.setItem('products', this.state.products)
     }
 
     deleteProduct = (id) => {
-        this.setState(prevState => {
-            const filteredProducts = prevState.products.filter(product => product.id != id)
-            return ({
-                products: filteredProducts
-            })
+        const filteredProducts = this.state.products.filter(product => product.id != id)
+        this.setState({
+            products: filteredProducts
         })
     }
 
@@ -73,7 +76,7 @@ class Home extends Component {
         const state = {...this.state}
         state.products.map(product => {
             if (product.id == id) {
-                if(product += amount >= 0) {
+                if(product.price += amount >= 0) {
                     product.price += amount
                 }
             }
@@ -85,17 +88,21 @@ class Home extends Component {
     render () {
         return <div className="row container mx-auto">
             <h1 className="text-center my-3">Home Component</h1>
-            {this.state.products.map(product => {
-                return (
-                    <Product 
-                        key={product.id} 
-                        product={product} 
-                        deleteProduct={this.deleteProduct}
-                        increasePrice={this.increasePrice}
-                        decreasePrice={this.decreasePrice}
-                    />
-                )}
-            )}
+            {
+                this.state.products.map(product => {
+                    return (
+                        <Product 
+                            key={product.id} 
+                            product={product} 
+                            deleteProduct={this.deleteProduct}
+                            increasePrice={this.increasePrice}
+                            decreasePrice={this.decreasePrice}
+                        />
+                    )}
+                )
+            }
+
+            <button onClick={this.saveToStorage} className='btn btn-success w-100 my-3'>Add Last Update To Storage</button>
         </div>
     }
 }
