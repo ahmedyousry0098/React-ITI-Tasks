@@ -1,0 +1,7 @@
+.about-container {
+    height: 80vh;
+    background-image: url('../../../public/homebg.png');
+    background-position: left;
+    background-repeat: no-repeat;
+    opacity: 0.9;
+}
